@@ -102,7 +102,7 @@ def authenticate(keep_privkey=False):
 
         # TODO: check also is the privkey (ElGamal obj) has been cached
         #       in self.privkey (when invoked with keep_privkey)
-        retval = self.vault.login(username, pkgres.get_distribution('SFLvault_client').version)
+        retval = self.vault.login(username, pkgres.get_distribution('sflvault').version)
         self.authret = retval
         if not retval['error']:
             # try the last token. This is to avoid needless decrypting. See #9440.

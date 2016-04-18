@@ -15,13 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-try:
-    from setuptools import setup, find_packages
-except ImportError:
-    from ez_setup import use_setuptools
-    use_setuptools()
-    from setuptools import setup, find_packages
-
+from setuptools import setup, find_packages
 
 
 setup(
@@ -32,8 +26,8 @@ setup(
     author_email='alexandre.bourget@savoirfairelinux.com',
     url='http://www.sflvault.org',
     license='GPLv3',
-    install_requires=["SFLvault-client"],
-    packages=find_packages(exclude=['ez_setup']),
+    install_requires=["sflvault"],
+    packages=find_packages(),
     include_package_data=True,
     entry_points="""
     [sflvault.services]

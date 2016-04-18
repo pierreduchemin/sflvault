@@ -2,7 +2,7 @@
 #
 # SFLvault - Secure networked password store and credentials manager.
 #
-# Copyright (C) 2014 Savoir-faire Linux inc.
+# Copyright (C) 2016 Savoir-faire Linux inc.
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,41 +17,24 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-try:
-    from setuptools import setup, find_packages
-except ImportError:
-    from distribute_setup import use_setuptools
-    use_setuptools()
-    from setuptools import setup, find_packages
-
-import platform
+from setuptools import setup, find_packages
 
 dependencies = [
     "pycrypto",
     "decorator",
+    "urwid",
+    "pexpect",
 ]
 
-if platform.system() != 'Windows':
-    dependencies += ["urwid>=0.9.8.1", "pexpect>=3.0"]
-
 setup(
-    name='SFLvault-client',
+    name='sflvault',
     version="0.8.0",
     description='Networked credentials store and authentication manager - Client',
     author='Alexandre Bourget',
-    author_email='alexandre.bourget@savoirfairelinux.com',
     url='http://www.sflvault.org',
     license='GPLv3',
     install_requires=dependencies,
     packages=find_packages(),
-    namespace_packages=['sflvault'],
-    include_package_data=True,
-    test_suite='nose.collector',
-    package_data={'sflvault': ['i18n/*/LC_MESSAGES/*.mo']},
-    #message_extractors = {'sflvault': [
-    #        ('**.py', 'python', None),
-    #        ('templates/**.mako', 'mako', None),
-    #        ('public/**', 'ignore', None)]},
     entry_points="""
     [console_scripts]
     sflvault = sflvault.client.commands:main
