@@ -24,6 +24,7 @@ dependencies = [
     "decorator",
     "urwid",
     "pexpect",
+    "keyring>=2.0,<8.0"
 ]
 
 setup(
