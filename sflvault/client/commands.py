@@ -77,15 +77,15 @@ class SFLvaultShell(object):
     def _run(self):
         """Go through all commands on a pseudo-shell, and execute them,
         caching the passphrase at some point."""
-        
+
         print "Welcome to SFLvault. Type 'help' for help."
         prompt = "SFLvault> "
-        
+
         while True:
             cmd = raw_input(prompt)
             if not cmd:
                 continue
-            
+
             # Get sys.argv-like parameters
             args = shlex.split(cmd)
 
@@ -99,7 +99,7 @@ class SFLvaultShell(object):
                     runcmd._run(args)
                 except ExitParserException, e:
                     pass
-                
+
                 if hasattr(runcmd, 'next_command') and platform.system() != 'Windows':
                     print "[Added to shell history: %s]" % runcmd.next_command
                     readline.add_history(runcmd.next_command)
@@ -129,7 +129,7 @@ class SFLvaultCommand(object):
         :param parser: an option parser, otherwise it will be created (recommended)
         """
         self.parser = (parser or optparse.OptionParser(usage=optparse.SUPPRESS_USAGE))
-        
+
         if not config and not vault:
             raise ValueError("`config` required if `vault` not specified")
 
@@ -200,7 +200,7 @@ class SFLvaultCommand(object):
             print "[SFLvault] Cannot connect to the vault: %s" % e
         except KeyringError, e:
             print "[SFLvault] Keyring error: %s" % e
-        
+
 
     def _parse(self):
         """Parse the command line options, and fill self.opts and self.args"""
@@ -211,7 +211,7 @@ class SFLvaultCommand(object):
         """Print this help.
 
         You can use:
-        
+
           help [command]
 
         to get further help for `command`."""
@@ -225,7 +225,7 @@ class SFLvaultCommand(object):
             sys.exit()
 
         # Normal help screen.
-        print "%s version %s" % ('SFLvault-client', pkgres.get_distribution('SFLvault_client').version)
+        print "sflvault version %s" % pkgres.get_distribution('sflvault').version
         print "---------------------------------------------"
 
         if not cmd:
@@ -240,7 +240,7 @@ class SFLvaultCommand(object):
                         doc = doc.split("\n")[0]
                     else:
                         doc = '[n/a]'
-                
+
                     print " %s%s%s" % (x.replace('_', '-'), (18 - len(x)) * ' ', doc)
             print "---------------------------------------------"
             print "Run: sflvault [command] --help for more details on each of those commands."
@@ -265,11 +265,11 @@ class SFLvaultCommand(object):
             print "No such command"
 
         print "---------------------------------------------"
-            
+
         if (error):
             print "ERROR calling %s: %s" % (cmd, error)
         return
-            
+
 
     def user_add(self):
         """Add a user to the vault."""
@@ -282,7 +282,7 @@ class SFLvaultCommand(object):
 
         if (len(self.args) != 1):
             raise SFLvaultParserError("Invalid number of arguments")
-        
+
         username = self.args[0]
         admin = self.opts.is_admin
 
@@ -293,7 +293,7 @@ class SFLvaultCommand(object):
         """Add a new customer."""
         self.parser.set_usage('customer-add "customer name"')
         self._parse()
-        
+
         if (len(self.args) != 1):
             raise SFLvaultParserError('Invalid number of arguments')
 
@@ -323,7 +323,7 @@ class SFLvaultCommand(object):
         Make sure you have detached all services' childs before removing a
         customer with machines which has services that are parents to other
         services."""
-        
+
         self.parser.set_usage("customer-del -c <customer_id>")
         self.parser.add_option('-c', dest="customer_id", default=None,
                                help="Customer to be removed")
@@ -341,7 +341,7 @@ class SFLvaultCommand(object):
 
         Make sure you have detached all services' childs before removing
         a machine which has services that are parents to other services.
-        """        
+        """
         self.parser.set_usage("machine-del -m <machine_id>")
         self.parser.add_option('-m', dest="machine_id", default=None,
                                help="Machine to be removed")
@@ -367,7 +367,7 @@ class SFLvaultCommand(object):
 
         service_id = self.vault.vaultId(self.opts.service_id, 's')
         self.vault.service_del(service_id)
-        
+
 
     def machine_add(self):
         """Add a new machine."""
@@ -388,7 +388,7 @@ class SFLvaultCommand(object):
 
         if not self.opts.name:
             raise SFLvaultParserError("Required parameter 'name' omitted")
-        
+
         ## TODO: make a list-customers and provide a selection using arrows or
         #        or something alike.
         if not self.opts.customer_id:
@@ -412,12 +412,12 @@ class SFLvaultCommand(object):
             out = []
             if url.username:
                 out.append('%s@' % url.username)
-            
+
             out.append(url.hostname)
-            
+
             if url.port:
                 out.append(":%d" % url.port)
-            
+
             url = urlparse.urlunparse((url[0],
                                        ''.join(out),
                                        url[2], url[3], url[4], url[5]))
@@ -642,7 +642,7 @@ class SFLvaultCommand(object):
 
         This option takes no argument, it just lists customers with their IDs."""
         self._parse()
-        
+
         if len(self.args):
             raise SFLvaultParserError('Invalid number of arguments')
 
@@ -685,7 +685,7 @@ class SFLvaultCommand(object):
         self._parse()
 
         self._group_service_parse()
-        
+
         self.vault.group_add_service(self.opts.group_id, self.opts.service_id)
 
     def group_del_service(self):
@@ -695,7 +695,7 @@ class SFLvaultCommand(object):
         self._parse()
 
         self._group_service_parse()
-        
+
         self.vault.group_del_service(self.opts.group_id, self.opts.service_id)
 
 
@@ -708,7 +708,7 @@ class SFLvaultCommand(object):
     def _group_user_parse(self):
         if not self.opts.group_id or not self.opts.user:
             raise SFLvaultParserError("-g and -u options required")
-        
+
         self.opts.group_id = self.vault.vaultId(self.opts.group_id, 'g')
 
     def group_add_user(self):
@@ -719,7 +719,7 @@ class SFLvaultCommand(object):
         self._group_user_options()
         self._parse()
         self._group_user_parse()
-        
+
         self.vault.group_add_user(self.opts.group_id, self.opts.user,
                                   self.opts.is_admin)
 
@@ -730,7 +730,7 @@ class SFLvaultCommand(object):
         self._parse()
 
         self._group_user_parse()
-        
+
         self.vault.group_del_user(self.opts.group_id, self.opts.user)
 
     def group_del(self):
@@ -742,7 +742,7 @@ class SFLvaultCommand(object):
         self.parser.add_option('-g', dest="group_id", default=None,
                                help="Group to be removed")
         self._parse()
-        
+
         if not self.opts.group_id:
             raise SFLvaultParserError("group_id is required")
 
@@ -815,16 +815,16 @@ class SFLvaultCommand(object):
         """Setup a new user on the vault.
 
         Call this after an admin has called `user-add` on the vault.
-        
+
         Arguments:
             username: the username used in the `user-add` call.
-        
+
             vault_url: the URL (http://example.org:port/vault/rpc) to the vault.
         """
-        
+
         self.parser.set_usage("user-setup <username> <vault_url>")
         self._parse()
-        
+
         if len(self.args) != 2:
             raise SFLvaultParserError("Invalid number of arguments")
 
@@ -872,7 +872,7 @@ class SFLvaultCommand(object):
 
         if len(self.args) < 1:
             raise SFLvaultParserError("Invalid number of arguments")
-        
+
         where = self.args[0]
         vid = self.vault.vaultId(where, 's') # In case we want to add an alias
         command_line = self.args[1:]
@@ -910,7 +910,7 @@ class SFLvaultCommand(object):
         self.parser.add_option('-q', '--quiet', dest="verbose",
                                action="store_false", default=True,
                                help="Don't show verbose output (includes notes, location)")
-        
+
         self.parser.add_option('-m', '--machine', dest="machines",
                                action="append", type="string",
                                help="Filter results on these machines only")
@@ -1000,7 +1000,7 @@ class SFLvaultCompleter:
 
 ###
 ### Execute requested command-line command
-###    
+###
 
 # Default configuration file
 if platform.system() == 'Windows':
@@ -1056,7 +1056,7 @@ def main():
     else:
         f = SFLvaultCommand(config=config_file)
         f._run(args[1:])
-    
+
 
 # For wrappers.
 if __name__ == "__main__":
